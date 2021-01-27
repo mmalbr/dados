@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">dados</string>
-</resources>
+    <string name="app_name">Quantos pontos?</string>
+    <string name="dado01">Dado randomico 1</string>
+    <string name="dado02">Dado randomico 2</string>
+    <string name="dado03">Dado randomico 3</string>
+    <string name="dado04">Dado randomico 4</string>
+    <string name="dado05">Dado randomico 5</string>
+    <string name="dado06">Dado randomico 6</string>
+    <string name="botao_provisorio">Botão Provisório</string>
+    </resources>
