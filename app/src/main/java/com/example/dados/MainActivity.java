@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-
+    private AdView mAdView;
     private SeekBar seekBarEscala;
     private TextView valorEscala;
 
@@ -22,13 +29,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //banner admob - Início
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        //banner admob - Fim
+
         seekBarEscala = findViewById(R.id.seekBarEscala);
         valorEscala = findViewById(R.id.valorEscala);
 
         seekBarEscala.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                valorEscala.setText("" +  progress);
+                valorEscala.setText("" +  (progress + 6));
                 TextView acabouTempo = findViewById(R.id.textView2);
                 //acabouTempo.setVisibility(View.INVISIBLE);
             }
@@ -52,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         TextView acabouTempo = findViewById(R.id.textView2);
         acabouTempo.setVisibility(View.VISIBLE);
         int y2 = Integer.parseInt(y.toString());
-        if (x == y2){
+        if ((x + 6) == y2){
             Button botaoVerifica = findViewById(R.id.botaoVerificar);
             botaoVerifica.setVisibility(View.INVISIBLE );
             SeekBar escalaVerifica = findViewById(R.id.seekBarEscala);
@@ -60,10 +81,12 @@ public class MainActivity extends AppCompatActivity {
             TextView descEscala = findViewById(R.id.textView3);
             descEscala.setVisibility(View.INVISIBLE);
             TextView valorEsc = findViewById(R.id.valorEscala);
-            valorEsc.setText("0");
+            valorEsc.setText("6");
             valorEsc.setVisibility(View.INVISIBLE);
             Button botaoApaga = findViewById(R.id.botaoAcao);
             botaoApaga.setVisibility(View.VISIBLE );
+            Button botaoReset = findViewById(R.id.botaoReset);
+            botaoReset.setVisibility(View.VISIBLE );
             seekBarEscala.setProgress(0);
             acabouTempo.setText("Parabéns, você acertou!!!!!\nQue tal jogar mais uma vez?");
             ImageView dado01 = findViewById(R.id.dado01);
@@ -78,19 +101,10 @@ public class MainActivity extends AppCompatActivity {
             dado04.setImageResource(R.drawable.dados00);
             dado05.setImageResource(R.drawable.dados00);
             dado06.setImageResource(R.drawable.dados00);
+            botaoReset.setVisibility(View.INVISIBLE );
         }
         else{
-            if (x < 6){
-                acabouTempo.setText("Valor impossível");
-
-            }else
-                {
-                    acabouTempo.setText("Errrrou! Tente novamente!");
-
-
-                }
-
-
+            acabouTempo.setText("Errrrou! Tente novamente!");
         }
 
     }
@@ -267,6 +281,8 @@ public class MainActivity extends AppCompatActivity {
 
             public void onTick(long millisUntilFinished) {
                 textView2.setText("" + millisUntilFinished / 1000);
+                Button botaoReset = findViewById(R.id.botaoReset);
+                botaoReset.setVisibility(View.INVISIBLE );
             }
 
             public void onFinish() {
@@ -277,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
                 dado05.setImageResource(R.drawable.dados0);
                 dado06.setImageResource(R.drawable.dados0);
                 textView2.setText("Acabou o tempo!");
+                Button botaoReset = findViewById(R.id.botaoReset);
+                botaoReset.setVisibility(View.VISIBLE );
                // Button botaoApaga = findViewById(R.id.botaoAcao);
                // botaoApaga.setVisibility(View.VISIBLE );
 
@@ -284,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
         Button botaoApaga = findViewById(R.id.botaoAcao);
         botaoApaga.setVisibility(View.INVISIBLE );
+
         Button botaoVerifica = findViewById(R.id.botaoVerificar);
         botaoVerifica.setVisibility(View.VISIBLE );
         SeekBar escalaVerifica = findViewById(R.id.seekBarEscala);
